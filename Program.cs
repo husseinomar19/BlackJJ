@@ -4,8 +4,15 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!"); 
-            Console.WriteLine("Hello, World!");
+           start start = new start();
+           Card card = new Card();
+
+            // start.Gamestart();
+            card.DrawAndCalculate();
+            card.DisplayCard();
+            
+
+
         }
     }
 }
