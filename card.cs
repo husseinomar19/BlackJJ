@@ -50,6 +50,8 @@ namespace BlackJJ
             start start = new start();
             start.Gamestart(); 
 
+            
+
             int aantalDeelnemers = start.deelnemers;
             List<string> deck = GetDeck();
 
@@ -93,8 +95,54 @@ namespace BlackJJ
             {
                 int totalValue = CalculateTotalValue(drawnCardsPerPlayer[i]);
                 Console.WriteLine($"Totale waarde van getrokken kaarten voor deelnemer {i + 1}: {totalValue}");
+                
+            }
+            DetermineWinner();
+        }
+        public void DetermineWinner()
+        {
+            int aantalDeelnemers = drawnCardsPerPlayer.Count;
+
+            int winnendeTotaleWaarde = 0;
+            int winnaarIndex = -1;
+            bool gelijkspel = false;
+
+            for (int i = 0; i < aantalDeelnemers; i++)
+            {
+                int totaleWaarde = CalculateTotalValue(drawnCardsPerPlayer[i]);
+
+                if (totaleWaarde > 21)
+                    continue;
+
+                if (totaleWaarde == winnendeTotaleWaarde)
+                {
+                    gelijkspel = true;
+                    break;
+                }
+
+                if (totaleWaarde > winnendeTotaleWaarde && totaleWaarde <= 21)
+                {
+                    winnendeTotaleWaarde = totaleWaarde;
+                    winnaarIndex = i;
+                }
+            }
+
+            if (gelijkspel)
+            {
+                Console.WriteLine("Gelijkspel! Niemand wint.");
+                return;
+            }
+
+            if (winnaarIndex != -1)
+            {
+                Console.WriteLine($"Deelnemer {winnaarIndex + 1} wint met een totale waarde van {winnendeTotaleWaarde}!");
+            }
+            else
+            {
+                Console.WriteLine("Alle deelnemers zijn gediskwalificeerd!");
             }
         }
+
 
 
         private int CalculateTotalValue(List<string> cards)
