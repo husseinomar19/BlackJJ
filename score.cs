@@ -13,15 +13,15 @@ namespace BlackJJ
         {
             Console.WriteLine("Hoeveel punten wil je in zitten?");
             punten = int.Parse(Console.ReadLine());
-            Console.WriteLine("Je hebt : " + punten);
+            Console.WriteLine("Je hebt in gezit : " + punten);
             Console.WriteLine("Spel is gestart de karten worden nu uitgedeeld");
             
         }
 
-        public void ScoreBijhouden()
+        public void ScoreBijhouden(int punten , int deelnemers)
 
         {
-            Console.WriteLine("Speler nummer hebt " + punten + "gewonen");
+            Console.WriteLine("Speler nummer " + deelnemers + " hebt " + punten + " gewonen");
 
         }
     }
