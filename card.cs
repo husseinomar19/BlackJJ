@@ -45,12 +45,16 @@ namespace BlackJJ
         public List<List<string>> drawnCardsPerPlayer = new List<List<string>>();
         public Random random = new Random();
 
+        public int scorepunten;
         public void DrawAndCalculate()
         {
             start start = new start();
-            start.Gamestart(); 
-
+            start.Gamestart();
+            scorepunten = start.punten;
             
+
+
+
 
             int aantalDeelnemers = start.deelnemers;
             List<string> deck = GetDeck();
@@ -78,8 +82,6 @@ namespace BlackJJ
                     deck.RemoveAt(randomIndex);
                 }
             }
-
-            
             Console.WriteLine("Getrokken kaarten per deelnemer:");
             for (int i = 0; i < aantalDeelnemers; i++)
             {
@@ -91,6 +93,53 @@ namespace BlackJJ
                 Console.WriteLine();
             }
 
+            Console.WriteLine("Choose an action: (H)it or (S)tand");
+            string choice = Console.ReadLine().Trim().ToUpper();
+            bool dealerbeurt = true;
+            int dealer = drawnCardsPerPlayer.Count - 1; 
+
+            while (dealerbeurt)
+            {
+                if (choice == "H")
+                {
+                    List<string> drawnCards = drawnCardsPerPlayer[dealer];
+                    int randomIndex = random.Next(deck.Count);
+                    drawnCards.Add(deck[randomIndex]);
+                    deck.RemoveAt(randomIndex);
+
+                    
+                    Console.WriteLine($"Nieuwe card drawn: {drawnCards[drawnCards.Count - 1]}");
+
+                   
+                    int totalValue = CalculateTotalValue(drawnCards);
+                    Console.WriteLine($"Total value nu: {totalValue}");
+
+                    
+                    if (totalValue > 21)
+                    {
+                        Console.WriteLine("Bust! jouw totale is over 21.");
+                        dealerbeurt = false;
+                    }
+                    else
+                    {
+                        
+                        Console.WriteLine("H voor Hit S voor Stand:");
+                        choice = Console.ReadLine().Trim().ToUpper();
+                    }
+                }
+                else if (choice == "S")
+                {
+                    dealerbeurt = false;
+                }
+                else
+                {
+                    Console.WriteLine("opnieuw. H voor Hit en S voor Stand");
+                    choice = Console.ReadLine().Trim().ToUpper();
+                }
+            }
+
+            // totale per deelnemers berekend
+
             for (int i = 0; i < aantalDeelnemers; i++)
             {
                 int totalValue = CalculateTotalValue(drawnCardsPerPlayer[i]);
@@ -98,6 +147,9 @@ namespace BlackJJ
                 
             }
             DetermineWinner();
+            
+           
+
         }
         public void DetermineWinner()
         {
@@ -141,6 +193,9 @@ namespace BlackJJ
             {
                 Console.WriteLine("Alle deelnemers zijn gediskwalificeerd!");
             }
+            score score = new score();
+            
+            score.ScoreBijhouden(scorepunten, winnaarIndex + 1);
         }
 
 
