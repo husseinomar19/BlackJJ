@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace BlackJJ
 {
@@ -9,25 +10,14 @@ namespace BlackJJ
         public void DisplayCard()
         {
             List<string> cards = GetDeck();
-
-            
-            //foreach (string card in cards)
-           // {
-              //  Console.WriteLine(card);
-          //  }
         }
-
-        // hier maak ik method om 52 genereren 
         private List<string> GetDeck()
         {
-            //hier maak ik lijst om kaarten op te slaan 
             List<string> deck = new List<string>();
 
-            //hier maak ik 2 aar. 
             string[] suits = { "Hearts", "Diamonds", "Clubs", "Spades" };
             string[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
 
-           //deze foreach zorgt voor dat 4 deck worden gemaakt hearts en Diamons en Clubs en Spades.
             foreach (string suit in suits)
             {
                 foreach (string value in values)
@@ -44,26 +34,20 @@ namespace BlackJJ
         
         public List<List<string>> drawnCardsPerPlayer = new List<List<string>>();
         public Random random = new Random();
-
-        public int scorepunten;
+        public int ScoreDeelnemerpunten;
         public void DrawAndCalculate()
         {
             start start = new start();
             start.Gamestart();
-            scorepunten = start.punten;
-            
+            ScoreDeelnemerpunten = start.Punten;
 
 
 
-
-            int aantalDeelnemers = start.deelnemers;
+            int aantalDeelnemers = start.Deelnemers;
             List<string> deck = GetDeck();
 
           
             Random random = new Random();
-
-           
-           
 
             // Maak lijsten voor elke deelnemer
             for (int i = 0; i < aantalDeelnemers; i++)
@@ -138,69 +122,22 @@ namespace BlackJJ
                 }
             }
 
-            // totale per deelnemers berekend
-
             for (int i = 0; i < aantalDeelnemers; i++)
             {
                 int totalValue = CalculateTotalValue(drawnCardsPerPlayer[i]);
                 Console.WriteLine($"Totale waarde van getrokken kaarten voor deelnemer {i + 1}: {totalValue}");
                 
             }
-            DetermineWinner();
-            
-           
 
+            deelnemer deel = new deelnemer();
+            score scoreObject = new score();
+            start startObject = new start();
+            deel.DetermineWinner(this, startObject, scoreObject);
         }
-        public void DetermineWinner()
-        {
-            int aantalDeelnemers = drawnCardsPerPlayer.Count;
-
-            int winnendeTotaleWaarde = 0;
-            int winnaarIndex = -1;
-            bool gelijkspel = false;
-
-            for (int i = 0; i < aantalDeelnemers; i++)
-            {
-                int totaleWaarde = CalculateTotalValue(drawnCardsPerPlayer[i]);
-
-                if (totaleWaarde > 21)
-                    continue;
-
-                if (totaleWaarde == winnendeTotaleWaarde)
-                {
-                    gelijkspel = true;
-                    break;
-                }
-
-                if (totaleWaarde > winnendeTotaleWaarde && totaleWaarde <= 21)
-                {
-                    winnendeTotaleWaarde = totaleWaarde;
-                    winnaarIndex = i;
-                }
-            }
-
-            if (gelijkspel)
-            {
-                Console.WriteLine("Gelijkspel! Niemand wint.");
-                return;
-            }
-
-            if (winnaarIndex != -1)
-            {
-                Console.WriteLine($"Deelnemer {winnaarIndex + 1} wint met een totale waarde van {winnendeTotaleWaarde}!");
-            }
-            else
-            {
-                Console.WriteLine("Alle deelnemers zijn gediskwalificeerd!");
-            }
-            score score = new score();
-            
-            score.ScoreBijhouden(scorepunten, winnaarIndex + 1);
-        }
-
-
-
-        private int CalculateTotalValue(List<string> cards)
+        
+        
+        
+        public int CalculateTotalValue(List<string> cards)
         {
             
             Dictionary<string, int> cardValues = new Dictionary<string, int>

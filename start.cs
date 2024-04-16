@@ -1,29 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
-namespace BlackJJ
-{
-    internal class start
+    namespace BlackJJ
     {
-        public int deelnemers;
-        public int punten;
-        public void Gamestart()
+        internal class start
         {
-            score score = new score();
-            Console.WriteLine("Welkom in Black Jack spel");
-            Console.WriteLine("Met hoeveel deelnemers wil je spelen?");
-            deelnemers = int.Parse(Console.ReadLine());
-            Console.WriteLine("Anntal deelnemers zijn bepaald" + " "+ deelnemers);
-            //score.Score();
-            Console.WriteLine("Hoeveel punten wil je in zitten?");
-            punten = int.Parse(Console.ReadLine());
-            Console.WriteLine("Je hebt in gezit : " + punten);
-            Console.WriteLine("Spel is gestart de karten worden nu uitgedeeld");
+        private int _deelnemers;
+        private int _punten;
+
+        public int Deelnemers
+        {
+            get { return _deelnemers; }
+            set { _deelnemers = value; }
         }
+
+        public int Punten
+        {
+            get { return _punten; }
+            set { _punten = value; }
+        }
+        public void Gamestart()
+            {
+            
+                Console.WriteLine("Welkom in Black Jack spel");
+                Console.WriteLine("Met hoeveel deelnemers wil je spelen?");
+                Deelnemers = int.Parse(Console.ReadLine());
+                Console.WriteLine("Anntal deelnemers zijn bepaald" + " "+ Deelnemers);
+                Console.WriteLine("Hoeveel punten wil je in zitten?");
+                Punten = int.Parse(Console.ReadLine());
+                Console.WriteLine("Je hebt in" + Punten + " gezit.");
+                Console.WriteLine("Spel is gestart de karten worden nu uitgedeeld");
+            }
         
         
+        }
     }
-}
