@@ -7,6 +7,12 @@ namespace BlackJJ
 {
     internal class Card
     {
+        public List<List<string>> drawnCardsPerPlayer = new List<List<string>>();
+        public Random random = new Random();
+        public int ScoreDeelnemerpunten;
+        public List<string> drawnCards;
+        public int aantalDeelnemers;
+        public List<string> deck;
         public void DisplayCard()
         {
             List<string> cards = GetDeck();
@@ -32,9 +38,7 @@ namespace BlackJJ
             return deck;
         }
         
-        public List<List<string>> drawnCardsPerPlayer = new List<List<string>>();
-        public Random random = new Random();
-        public int ScoreDeelnemerpunten;
+        
         public void DrawAndCalculate()
         {
             start start = new start();
@@ -43,8 +47,10 @@ namespace BlackJJ
 
 
 
-            int aantalDeelnemers = start.Deelnemers;
-            List<string> deck = GetDeck();
+
+
+            aantalDeelnemers = start.Deelnemers;
+            deck = GetDeck();
 
           
             Random random = new Random();
@@ -56,16 +62,46 @@ namespace BlackJJ
             }
 
             // Teken kaarten voor elke deelnemer
+            // Eerst krijgt elke speler twee kaarten
             for (int i = 0; i < aantalDeelnemers; i++)
             {
-                List<string> drawnCards = drawnCardsPerPlayer[i];
-                for (int j = 0; j < 2; j++) 
+                drawnCards = drawnCardsPerPlayer[i];
+
+                // Twee kaarten voor elke speler
+                for (int j = 0; j < 2; j++)
                 {
                     int randomIndex = random.Next(deck.Count);
                     drawnCards.Add(deck[randomIndex]);
                     deck.RemoveAt(randomIndex);
                 }
             }
+
+            // Controleren of de totale kaartwaarde van elke speler (behalve de dealer) minder is dan 12
+            for (int i = 0; i < aantalDeelnemers - 1; i++)
+            {
+                drawnCards = drawnCardsPerPlayer[i];
+                int totalewaarde = CalculateTotalValue(drawnCards);
+
+                // Extra kaarten trekken als de totale kaartwaarde minder is dan 12
+                if (totalewaarde < 13)
+                {
+                    int extraKaarten = 13 - totalewaarde;
+
+                    for (int k = 0; k < extraKaarten; k++)
+                    {
+                        int randomIndex = random.Next(deck.Count);
+                        drawnCards.Add(deck[randomIndex]);
+                        deck.RemoveAt(randomIndex);
+                    }
+
+                    ConsoleColor originalColor = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Extra kaarten getrokken voor Speler {i + 1}");
+                    Console.ForegroundColor = originalColor;
+                }
+            }
+
+
             Console.WriteLine("Getrokken kaarten per deelnemer:");
             for (int i = 0; i < aantalDeelnemers; i++)
             {
@@ -76,37 +112,39 @@ namespace BlackJJ
                 }
                 Console.WriteLine();
             }
-
-            Console.WriteLine("Choose an action: (H)it or (S)tand");
+            Console.WriteLine("Dealer beurt :: (H)it or (S)tand");
             string choice = Console.ReadLine().Trim().ToUpper();
             bool dealerbeurt = true;
-            int dealer = drawnCardsPerPlayer.Count - 1; 
+            int dealer = drawnCardsPerPlayer.Count - 1;
 
             while (dealerbeurt)
             {
                 if (choice == "H")
                 {
-                    List<string> drawnCards = drawnCardsPerPlayer[dealer];
+                    drawnCards = drawnCardsPerPlayer[dealer];
                     int randomIndex = random.Next(deck.Count);
                     drawnCards.Add(deck[randomIndex]);
                     deck.RemoveAt(randomIndex);
 
-                    
-                    Console.WriteLine($"Nieuwe card drawn: {drawnCards[drawnCards.Count - 1]}");
 
-                   
+                    Console.WriteLine($"Nieuwe card drawn voor Dealer: {drawnCards[drawnCards.Count - 1]}");
+
+
                     int totalValue = CalculateTotalValue(drawnCards);
                     Console.WriteLine($"Total value nu: {totalValue}");
 
-                    
+
                     if (totalValue > 21)
                     {
+                        ConsoleColor originalColor = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Bust! jouw totale is over 21.");
+                        Console.ForegroundColor = originalColor;
                         dealerbeurt = false;
                     }
                     else
                     {
-                        
+
                         Console.WriteLine("H voor Hit S voor Stand:");
                         choice = Console.ReadLine().Trim().ToUpper();
                     }
@@ -125,8 +163,11 @@ namespace BlackJJ
             for (int i = 0; i < aantalDeelnemers; i++)
             {
                 int totalValue = CalculateTotalValue(drawnCardsPerPlayer[i]);
+                ConsoleColor originalColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Totale waarde van getrokken kaarten voor deelnemer {i + 1}: {totalValue}");
-                
+                Console.ForegroundColor = originalColor;
+
             }
 
             deelnemer deel = new deelnemer();
