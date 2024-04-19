@@ -8,7 +8,7 @@ namespace BlackJJ
 {
     internal class score
     {
-       
+        
         public void Score(int scorepunten)
         {
             Console.WriteLine("Hoeveel punten wil je in zitten?");

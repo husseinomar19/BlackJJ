@@ -31,7 +31,10 @@
                 Console.WriteLine("Anntal deelnemers zijn bepaald" + " "+ Deelnemers);
                 Console.WriteLine("Hoeveel punten wil je in zitten?");
                 Punten = int.Parse(Console.ReadLine());
-                Console.WriteLine("Je hebt in" + Punten + " gezit.");
+                ConsoleColor originalColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Je hebt in punten " + Punten + " gezit.");
+                Console.ForegroundColor = originalColor;
                 Console.WriteLine("Spel is gestart de karten worden nu uitgedeeld");
             }
         
